@@ -28,28 +28,28 @@ public class EmployeeManager {
         if (args[0].equals("l")) {
             System.out.println("Loading data ...");
             try {
-                BufferedReader r = new BufferedReader(
+                BufferedReader reader = new BufferedReader(
                     new InputStreamReader(
                         new FileInputStream("employees.txt")));
-                String l = r.readLine();
-                String e[] = l.split(",");
-                for (String emp : e) {
-                    System.out.println(emp);
+                String line = reader.readLine();
+                String employees[] = line.split(",");
+                for (String employee : employees) {
+                    System.out.println(employee);
                 }
             } catch (Exception e) {}
             System.out.println("Data Loaded.");
         } else if (args[0].equals("s")) {
             System.out.println("Loading data ...");
             try {
-                BufferedReader r = new BufferedReader(
+                BufferedReader reader = new BufferedReader(
                     new InputStreamReader(
                         new FileInputStream("employees.txt")));
-                String l = r.readLine();
-                System.out.println(l);
-                String e[] = l.split(",");
-                Random rand = new Random();
-                int idx = rand.nextInt(e.length);
-                System.out.println(e[idx]);
+                String line = reader.readLine();
+                System.out.println(line);
+                String employees[] = line.split(",");
+                Random random = new Random();
+                int index = random.nextInt(employees.length);
+                System.out.println(employees[index]);
             } catch (Exception e) {}
             System.out.println("Data Loaded.");
         } else if (args[0].contains("+")) {
