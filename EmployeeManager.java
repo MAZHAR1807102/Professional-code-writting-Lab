@@ -30,11 +30,11 @@ public class EmployeeManager {
         
         // Check arguments
         if (args[0].equals("l")) {
-            System.out.println("Loading data ...");
+            System.out.println(Constants.DATA_LOADED);
             try {
                 BufferedReader r = new BufferedReader(
                         new InputStreamReader(
-                                new FileInputStream("employees.txt")));
+                                new FileInputStream(Constants.EMPLOYEES_FILE)));
                 String l = r.readLine();
                 String e[] = l.split(",");
                 for (String emp : e) {
