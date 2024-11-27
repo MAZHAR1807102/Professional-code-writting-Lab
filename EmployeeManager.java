@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,52 +26,52 @@ public class EmployeeManager {
         }
 
 
-    private static String readFromFile() throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("employees.txt")))) {
-            return reader.readLine();
-        }
-    }
 
-
-    private static void writeToFile(String data, boolean append) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("employees.txt", append))) {
-            writer.write(data);
-        }
-    }
         
         // Check arguments
         if (args[0].equals("l")) {
             System.out.println("Loading data ...");
             try {
-                
-                String employees[] = readFromFile.split(",");
-                for (String employee : employees) {
-                    System.out.println(employee);
+                BufferedReader r = new BufferedReader(
+                        new InputStreamReader(
+                                new FileInputStream("employees.txt")));
+                String l = r.readLine();
+                String e[] = l.split(",");
+                for (String emp : e) {
+                    System.out.println(emp);
                 }
             } catch (Exception e) {}
             System.out.println("Data Loaded.");
         } else if (args[0].equals("s")) {
             System.out.println("Loading data ...");
             try {
-                String employees[] = readFromFile.split(",");
-                Random random = new Random();
-                int index = random.nextInt(employees.length);
-                System.out.println(employees[index]);
+                BufferedReader r = new BufferedReader(
+                        new InputStreamReader(
+                                new FileInputStream("employees.txt")));
+                String l = r.readLine();
+                System.out.println(l);
+                String e[] = l.split(",");
+                Random rand = new Random();
+                int idx = rand.nextInt(e.length);
+                System.out.println(e[idx]);
             } catch (Exception e) {}
             System.out.println("Data Loaded.");
         } else if (args[0].contains("+")) {
             System.out.println("Loading data ...");
             try {
-                String newEmployee = command.substring(1).trim();
-                writeToFile(", " + newEmployee, true);
+                BufferedWriter w = new BufferedWriter(
+                        new FileWriter("employees.txt", true));
+                String n = args[0].substring(1);
+                w.write(", " + n);
+                w.close();
             } catch (Exception e) {}
             System.out.println("Data Loaded.");
         } else if (args[0].contains("?")) {
             System.out.println("Loading data ...");
             try {
                 BufferedReader r = new BufferedReader(
-                    new InputStreamReader(
-                        new FileInputStream("employees.txt")));
+                        new InputStreamReader(
+                                new FileInputStream("employees.txt")));
                 String l = r.readLine();
                 String e[] = l.split(",");
                 boolean found = false;
@@ -110,8 +111,8 @@ public class EmployeeManager {
             System.out.println("Loading data ...");
             try {
                 BufferedReader r = new BufferedReader(
-                    new InputStreamReader(
-                        new FileInputStream("employees.txt")));
+                        new InputStreamReader(
+                                new FileInputStream("employees.txt")));
                 String l = r.readLine();
                 String e[] = l.split(",");
                 String n = args[0].substring(1);
@@ -121,7 +122,7 @@ public class EmployeeManager {
                     }
                 }
                 BufferedWriter w = new BufferedWriter(
-                    new FileWriter("employees.txt"));
+                        new FileWriter("employees.txt"));
                 w.write(String.join(",", e));
                 w.close();
             } catch (Exception e) {}
@@ -130,19 +131,34 @@ public class EmployeeManager {
             System.out.println("Loading data ...");
             try {
                 BufferedReader r = new BufferedReader(
-                    new InputStreamReader(
-                    new FileInputStream("employees.txt")));
+                        new InputStreamReader(
+                                new FileInputStream("employees.txt")));
                 String l = r.readLine();
                 String e[] = l.split(",");
                 String n = args[0].substring(1);
                 List<String> list = new ArrayList<>(Arrays.asList(e));
                 list.remove(n);
                 BufferedWriter w = new BufferedWriter(
-                    new FileWriter("employees.txt"));
+                        new FileWriter("employees.txt"));
                 w.write(String.join(",", list));
                 w.close();
             } catch (Exception e) {}
             System.out.println("Data Deleted.");
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private static String readFromFile() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("employees.txt")))) {
+            return reader.readLine();
+        }
+    }
+
+
+    @SuppressWarnings("unused")
+    private static void writeToFile(String data, boolean append) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("employees.txt", append))) {
+            writer.write(data);
         }
     }
 }
