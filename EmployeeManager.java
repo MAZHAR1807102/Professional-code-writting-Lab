@@ -10,6 +10,20 @@ import java.util.Random;
 
 public class EmployeeManager {
     public static void main(String[] args) {
+
+        if (args.length != 1) {
+            System.out.println("Error: Please provide exactly one command-line argument.");
+            System.out.println("Usage:");
+            System.out.println("  l  - List all employees");
+            System.out.println("  s  - Show a random employee");
+            System.out.println(" +<name> - Add a new employee");
+            System.out.println(" ?<name> - Search for an employee");
+            System.out.println("  c  - Count words and characters");
+            System.out.println(" u<name> - Update an employee name");
+            System.out.println(" d<name> - Delete an employee");
+            return;
+        }
+        
         // Check arguments
         if (args[0].equals("l")) {
             System.out.println("Loading data ...");
