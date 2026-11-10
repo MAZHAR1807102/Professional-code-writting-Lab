@@ -29,10 +29,10 @@ public class EmployeeManager {
                 for (String employee : employees) {
                     System.out.println(employee);
                 }
-            } catch (Exception e) {
-                // Errors are ignored for now (fixed in task 6)
+                System.out.println(Constants.DATA_LOADED);
+            } catch (IOException e) {
+                System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-            System.out.println(Constants.DATA_LOADED);
         } else if (args[0].equals(Constants.SHOW_RANDOM)) {
             System.out.println(Constants.LOADING_DATA);
             try {
@@ -42,19 +42,19 @@ public class EmployeeManager {
                 Random random = new Random();
                 int randomIndex = random.nextInt(employees.length);
                 System.out.println(employees[randomIndex]);
-            } catch (Exception e) {
-                // Errors are ignored for now (fixed in task 6)
+                System.out.println(Constants.DATA_LOADED);
+            } catch (IOException e) {
+                System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-            System.out.println(Constants.DATA_LOADED);
         } else if (args[0].contains(Constants.ADD)) {
             System.out.println(Constants.LOADING_DATA);
             try {
                 String newName = args[0].substring(1);
                 writeEmployeeLine(Constants.SEPARATOR + " " + newName, true);
-            } catch (Exception e) {
-                // Errors are ignored for now (fixed in task 6)
+                System.out.println(Constants.DATA_LOADED);
+            } catch (IOException e) {
+                System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-            System.out.println(Constants.DATA_LOADED);
         } else if (args[0].contains(Constants.SEARCH)) {
             System.out.println(Constants.LOADING_DATA);
             try {
@@ -67,10 +67,10 @@ public class EmployeeManager {
                         found = true;
                     }
                 }
-            } catch (Exception e) {
-                // Errors are ignored for now (fixed in task 6)
+                System.out.println(Constants.DATA_LOADED);
+            } catch (IOException e) {
+                System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-            System.out.println(Constants.DATA_LOADED);
         } else if (args[0].contains(Constants.COUNT)) {
             System.out.println(Constants.LOADING_DATA);
             try {
@@ -88,10 +88,10 @@ public class EmployeeManager {
                     }
                 }
                 System.out.println(wordCount + " word(s) found " + chars.length);
-            } catch (Exception e) {
-                // Errors are ignored for now (fixed in task 6)
+                System.out.println(Constants.DATA_LOADED);
+            } catch (IOException e) {
+                System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-            System.out.println(Constants.DATA_LOADED);
         } else if (args[0].contains(Constants.UPDATE)) {
             System.out.println(Constants.LOADING_DATA);
             try {
@@ -103,10 +103,10 @@ public class EmployeeManager {
                     }
                 }
                 writeEmployeeLine(String.join(Constants.SEPARATOR, employees), false);
-            } catch (Exception e) {
-                // Errors are ignored for now (fixed in task 6)
+                System.out.println(Constants.DATA_UPDATED);
+            } catch (IOException e) {
+                System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-            System.out.println(Constants.DATA_UPDATED);
         } else if (args[0].contains(Constants.DELETE)) {
             System.out.println(Constants.LOADING_DATA);
             try {
@@ -115,10 +115,10 @@ public class EmployeeManager {
                 List<String> remainingEmployees = new ArrayList<>(Arrays.asList(employees));
                 remainingEmployees.remove(nameToDelete);
                 writeEmployeeLine(String.join(Constants.SEPARATOR, remainingEmployees), false);
-            } catch (Exception e) {
-                // Errors are ignored for now (fixed in task 6)
+                System.out.println(Constants.DATA_DELETED);
+            } catch (IOException e) {
+                System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-            System.out.println(Constants.DATA_DELETED);
         }
     }
 
