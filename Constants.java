@@ -22,6 +22,7 @@ public final class Constants {
     public static final String DATA_DELETED = "Data Deleted.";
     public static final String EMPLOYEE_FOUND = "Employee found!";
     public static final String UPDATED_NAME = "Updated";
+    public static final String INVALID_COMMAND = "Unknown command: ";
     public static final String FILE_ERROR = "Error: could not access " + EMPLOYEES_FILE + ": ";
     public static final String USAGE = """
             Usage: java EmployeeManager <command>

@@ -46,7 +46,7 @@ public class EmployeeManager {
             } catch (IOException e) {
                 System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-        } else if (args[0].contains(Constants.ADD)) {
+        } else if (isNameCommand(args[0], Constants.ADD)) {
             System.out.println(Constants.LOADING_DATA);
             try {
                 String newName = args[0].substring(1);
@@ -55,7 +55,7 @@ public class EmployeeManager {
             } catch (IOException e) {
                 System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-        } else if (args[0].contains(Constants.SEARCH)) {
+        } else if (isNameCommand(args[0], Constants.SEARCH)) {
             System.out.println(Constants.LOADING_DATA);
             try {
                 String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
@@ -71,7 +71,7 @@ public class EmployeeManager {
             } catch (IOException e) {
                 System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-        } else if (args[0].contains(Constants.COUNT)) {
+        } else if (args[0].equals(Constants.COUNT)) {
             System.out.println(Constants.LOADING_DATA);
             try {
                 char[] chars = readEmployeeLine().toCharArray();
@@ -92,7 +92,7 @@ public class EmployeeManager {
             } catch (IOException e) {
                 System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-        } else if (args[0].contains(Constants.UPDATE)) {
+        } else if (isNameCommand(args[0], Constants.UPDATE)) {
             System.out.println(Constants.LOADING_DATA);
             try {
                 String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
@@ -107,7 +107,7 @@ public class EmployeeManager {
             } catch (IOException e) {
                 System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
-        } else if (args[0].contains(Constants.DELETE)) {
+        } else if (isNameCommand(args[0], Constants.DELETE)) {
             System.out.println(Constants.LOADING_DATA);
             try {
                 String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
@@ -119,7 +119,15 @@ public class EmployeeManager {
             } catch (IOException e) {
                 System.err.println(Constants.FILE_ERROR + e.getMessage());
             }
+        } else {
+            System.out.println(Constants.INVALID_COMMAND + args[0]);
+            System.out.println(Constants.USAGE);
         }
+    }
+
+    /** True if the argument starts with the prefix and has a name after it, like "+Mary". */
+    private static boolean isNameCommand(String argument, String prefix) {
+        return argument.startsWith(prefix) && argument.length() > prefix.length();
     }
 
     /** Reads the single line of employee names from the file. */
