@@ -1,11 +1,11 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -50,7 +50,11 @@ public class EmployeeManager {
     /** Prints every employee, one per line. */
     private static void listEmployees() throws IOException {
         System.out.println(Constants.LOADING_DATA);
-        for (String employee : splitNames(readEmployeeLine())) {
+        List<String> employees = loadEmployees();
+        if (employees.isEmpty()) {
+            System.out.println(Constants.NO_EMPLOYEES);
+        }
+        for (String employee : employees) {
             System.out.println(employee);
         }
         System.out.println(Constants.DATA_LOADED);
@@ -59,24 +63,29 @@ public class EmployeeManager {
     /** Prints one employee chosen at random. */
     private static void showRandomEmployee() throws IOException {
         System.out.println(Constants.LOADING_DATA);
-        String[] employees = splitNames(readEmployeeLine());
-        int randomIndex = new Random().nextInt(employees.length);
-        System.out.println(employees[randomIndex]);
+        List<String> employees = loadEmployees();
+        if (employees.isEmpty()) {
+            System.out.println(Constants.NO_EMPLOYEES);
+        } else {
+            int randomIndex = new Random().nextInt(employees.size());
+            System.out.println(employees.get(randomIndex));
+        }
         System.out.println(Constants.DATA_LOADED);
     }
 
     /** Adds a name to the end of the list. */
     private static void addEmployee(String newName) throws IOException {
         System.out.println(Constants.LOADING_DATA);
-        writeEmployeeLine(Constants.SEPARATOR + newName.trim(), true);
+        List<String> employees = loadEmployees();
+        employees.add(newName.trim());
+        saveEmployees(employees);
         System.out.println(Constants.DATA_LOADED);
     }
 
     /** Says whether the name is in the list. */
     private static void searchEmployee(String searchName) throws IOException {
         System.out.println(Constants.LOADING_DATA);
-        String[] employees = splitNames(readEmployeeLine());
-        if (Arrays.asList(employees).contains(searchName)) {
+        if (loadEmployees().contains(searchName)) {
             System.out.println(Constants.EMPLOYEE_FOUND);
         } else {
             System.out.println(Constants.EMPLOYEE_NOT_FOUND);
@@ -102,47 +111,49 @@ public class EmployeeManager {
     /** Replaces every match of the name with the text "Updated". */
     private static void updateEmployee(String nameToUpdate) throws IOException {
         System.out.println(Constants.LOADING_DATA);
-        String[] employees = splitNames(readEmployeeLine());
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i].equals(nameToUpdate)) {
-                employees[i] = Constants.UPDATED_NAME;
-            }
-        }
-        writeEmployeeLine(String.join(Constants.SEPARATOR, employees), false);
+        List<String> employees = loadEmployees();
+        employees.replaceAll(name -> name.equals(nameToUpdate) ? Constants.UPDATED_NAME : name);
+        saveEmployees(employees);
         System.out.println(Constants.DATA_UPDATED);
     }
 
     /** Removes the first match of the name from the list. */
     private static void deleteEmployee(String nameToDelete) throws IOException {
         System.out.println(Constants.LOADING_DATA);
-        List<String> remainingEmployees = new ArrayList<>(Arrays.asList(splitNames(readEmployeeLine())));
-        remainingEmployees.remove(nameToDelete);
-        writeEmployeeLine(String.join(Constants.SEPARATOR, remainingEmployees), false);
+        List<String> employees = loadEmployees();
+        employees.remove(nameToDelete);
+        saveEmployees(employees);
         System.out.println(Constants.DATA_DELETED);
     }
 
-    /** Reads the single line of employee names from the file. */
+    /** Reads the line of employee names, or "" if the file is missing or empty. */
     private static String readEmployeeLine() throws IOException {
+        if (!new File(Constants.EMPLOYEES_FILE).exists()) {
+            return "";
+        }
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(new FileInputStream(Constants.EMPLOYEES_FILE)))) {
-            return reader.readLine();
+            String line = reader.readLine();
+            return line == null ? "" : line;
         }
     }
 
-    /** Writes text to the file, either appending or replacing its contents. */
-    private static void writeEmployeeLine(String text, boolean append) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.EMPLOYEES_FILE, append))) {
-            writer.write(text);
+    /** Returns the trimmed, non-empty names from the file as a list that can be changed. */
+    private static List<String> loadEmployees() throws IOException {
+        List<String> employees = new ArrayList<>();
+        for (String name : readEmployeeLine().split(Constants.SEPARATOR)) {
+            if (!name.isBlank()) {
+                employees.add(name.trim());
+            }
         }
+        return employees;
     }
 
-    /** Splits the line into names and removes the spaces around each one. */
-    private static String[] splitNames(String line) {
-        String[] names = line.split(Constants.SEPARATOR);
-        for (int i = 0; i < names.length; i++) {
-            names[i] = names[i].trim();
+    /** Replaces the file contents with the given names, separated by commas. */
+    private static void saveEmployees(List<String> employees) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.EMPLOYEES_FILE))) {
+            writer.write(String.join(Constants.SEPARATOR, employees));
         }
-        return names;
     }
 
     /** True if the argument starts with the prefix and has a name after it, like "+Mary". */

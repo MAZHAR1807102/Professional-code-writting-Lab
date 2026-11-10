@@ -22,6 +22,7 @@ public final class Constants {
     public static final String DATA_UPDATED = "Data Updated.";
     public static final String DATA_DELETED = "Data Deleted.";
     public static final String EMPLOYEE_FOUND = "Employee found!";
+    public static final String NO_EMPLOYEES = "No employees found.";
     public static final String EMPLOYEE_NOT_FOUND = "Employee not found.";
     public static final String WORDS_FOUND = " word(s) found, ";
     public static final String CHARACTERS_FOUND = " character(s)";
