@@ -25,7 +25,7 @@ public class EmployeeManager {
         if (args[0].equals(Constants.LIST)) {
             System.out.println(Constants.LOADING_DATA);
             try {
-                String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
+                String[] employees = splitNames(readEmployeeLine());
                 for (String employee : employees) {
                     System.out.println(employee);
                 }
@@ -36,9 +36,7 @@ public class EmployeeManager {
         } else if (args[0].equals(Constants.SHOW_RANDOM)) {
             System.out.println(Constants.LOADING_DATA);
             try {
-                String line = readEmployeeLine();
-                System.out.println(line);
-                String[] employees = line.split(Constants.SEPARATOR);
+                String[] employees = splitNames(readEmployeeLine());
                 Random random = new Random();
                 int randomIndex = random.nextInt(employees.length);
                 System.out.println(employees[randomIndex]);
@@ -50,7 +48,7 @@ public class EmployeeManager {
             System.out.println(Constants.LOADING_DATA);
             try {
                 String newName = args[0].substring(1);
-                writeEmployeeLine(Constants.SEPARATOR + " " + newName, true);
+                writeEmployeeLine(Constants.SEPARATOR + newName.trim(), true);
                 System.out.println(Constants.DATA_LOADED);
             } catch (IOException e) {
                 System.err.println(Constants.FILE_ERROR + e.getMessage());
@@ -58,7 +56,7 @@ public class EmployeeManager {
         } else if (isNameCommand(args[0], Constants.SEARCH)) {
             System.out.println(Constants.LOADING_DATA);
             try {
-                String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
+                String[] employees = splitNames(readEmployeeLine());
                 boolean found = false;
                 String searchName = args[0].substring(1);
                 for (int i = 0; i < employees.length && !found; i++) {
@@ -67,6 +65,9 @@ public class EmployeeManager {
                         found = true;
                     }
                 }
+                if (!found) {
+                    System.out.println(Constants.EMPLOYEE_NOT_FOUND);
+                }
                 System.out.println(Constants.DATA_LOADED);
             } catch (IOException e) {
                 System.err.println(Constants.FILE_ERROR + e.getMessage());
@@ -74,20 +75,15 @@ public class EmployeeManager {
         } else if (args[0].equals(Constants.COUNT)) {
             System.out.println(Constants.LOADING_DATA);
             try {
-                char[] chars = readEmployeeLine().toCharArray();
-                boolean inWord = false;
+                String line = readEmployeeLine();
                 int wordCount = 0;
-                for (char c : chars) {
-                    if (c == ' ') {
-                        if (!inWord) {
-                            wordCount++;
-                            inWord = true;
-                        } else {
-                            inWord = false;
-                        }
+                for (String word : line.split(Constants.WORD_BREAKS)) {
+                    if (!word.isEmpty()) {
+                        wordCount++;
                     }
                 }
-                System.out.println(wordCount + " word(s) found " + chars.length);
+                System.out.println(wordCount + Constants.WORDS_FOUND
+                        + line.length() + Constants.CHARACTERS_FOUND);
                 System.out.println(Constants.DATA_LOADED);
             } catch (IOException e) {
                 System.err.println(Constants.FILE_ERROR + e.getMessage());
@@ -95,7 +91,7 @@ public class EmployeeManager {
         } else if (isNameCommand(args[0], Constants.UPDATE)) {
             System.out.println(Constants.LOADING_DATA);
             try {
-                String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
+                String[] employees = splitNames(readEmployeeLine());
                 String nameToUpdate = args[0].substring(1);
                 for (int i = 0; i < employees.length; i++) {
                     if (employees[i].equals(nameToUpdate)) {
@@ -110,7 +106,7 @@ public class EmployeeManager {
         } else if (isNameCommand(args[0], Constants.DELETE)) {
             System.out.println(Constants.LOADING_DATA);
             try {
-                String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
+                String[] employees = splitNames(readEmployeeLine());
                 String nameToDelete = args[0].substring(1);
                 List<String> remainingEmployees = new ArrayList<>(Arrays.asList(employees));
                 remainingEmployees.remove(nameToDelete);
@@ -123,6 +119,15 @@ public class EmployeeManager {
             System.out.println(Constants.INVALID_COMMAND + args[0]);
             System.out.println(Constants.USAGE);
         }
+    }
+
+    /** Splits the line into names and removes the spaces around each one. */
+    private static String[] splitNames(String line) {
+        String[] names = line.split(Constants.SEPARATOR);
+        for (int i = 0; i < names.length; i++) {
+            names[i] = names[i].trim();
+        }
+        return names;
     }
 
     /** True if the argument starts with the prefix and has a name after it, like "+Mary". */
