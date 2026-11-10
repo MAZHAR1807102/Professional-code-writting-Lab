@@ -17,69 +17,62 @@ public class EmployeeManager {
     public static void main(String[] args) {
         // Stop early unless exactly one argument was given
         if (args.length != 1) {
-            System.out.println("Usage: java EmployeeManager <command>");
-            System.out.println("  l        List all employees");
-            System.out.println("  s        Show a random employee");
-            System.out.println("  +<name>  Add an employee");
-            System.out.println("  ?<name>  Search for an employee");
-            System.out.println("  c        Count words and characters");
-            System.out.println("  u<name>  Update an employee");
-            System.out.println("  d<name>  Delete an employee");
+            System.out.println(Constants.USAGE);
             return;
         }
 
         // Run the command given as the first argument
-        if (args[0].equals("l")) {
-            System.out.println("Loading data ...");
+        if (args[0].equals(Constants.LIST)) {
+            System.out.println(Constants.LOADING_DATA);
             try {
-                String[] employees = readEmployeeLine().split(",");
+                String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
                 for (String employee : employees) {
                     System.out.println(employee);
                 }
             } catch (Exception e) {
                 // Errors are ignored for now (fixed in task 6)
             }
-            System.out.println("Data Loaded.");
-        } else if (args[0].equals("s")) {
-            System.out.println("Loading data ...");
+            System.out.println(Constants.DATA_LOADED);
+        } else if (args[0].equals(Constants.SHOW_RANDOM)) {
+            System.out.println(Constants.LOADING_DATA);
             try {
                 String line = readEmployeeLine();
                 System.out.println(line);
-                String[] employees = line.split(",");
+                String[] employees = line.split(Constants.SEPARATOR);
                 Random random = new Random();
                 int randomIndex = random.nextInt(employees.length);
                 System.out.println(employees[randomIndex]);
             } catch (Exception e) {
                 // Errors are ignored for now (fixed in task 6)
             }
-            System.out.println("Data Loaded.");
-        } else if (args[0].contains("+")) {
-            System.out.println("Loading data ...");
+            System.out.println(Constants.DATA_LOADED);
+        } else if (args[0].contains(Constants.ADD)) {
+            System.out.println(Constants.LOADING_DATA);
             try {
                 String newName = args[0].substring(1);
-                writeEmployeeLine(", " + newName, true);
+                writeEmployeeLine(Constants.SEPARATOR + " " + newName, true);
             } catch (Exception e) {
                 // Errors are ignored for now (fixed in task 6)
             }
-            System.out.println("Data Loaded.");
-        } else if (args[0].contains("?")) {
-            System.out.println("Loading data ...");
+            System.out.println(Constants.DATA_LOADED);
+        } else if (args[0].contains(Constants.SEARCH)) {
+            System.out.println(Constants.LOADING_DATA);
             try {
-                String[] employees = readEmployeeLine().split(",");
+                String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
                 boolean found = false;
                 String searchName = args[0].substring(1);
                 for (int i = 0; i < employees.length && !found; i++) {
                     if (employees[i].equals(searchName)) {
-                        System.out.println("Employee found!");
+                        System.out.println(Constants.EMPLOYEE_FOUND);
                         found = true;
                     }
                 }
             } catch (Exception e) {
                 // Errors are ignored for now (fixed in task 6)
             }
-            System.out.println("Data Loaded.");
-        } else if (args[0].contains("c")) {
-            System.out.println("Loading data ...");
+            System.out.println(Constants.DATA_LOADED);
+        } else if (args[0].contains(Constants.COUNT)) {
+            System.out.println(Constants.LOADING_DATA);
             try {
                 char[] chars = readEmployeeLine().toCharArray();
                 boolean inWord = false;
@@ -98,48 +91,48 @@ public class EmployeeManager {
             } catch (Exception e) {
                 // Errors are ignored for now (fixed in task 6)
             }
-            System.out.println("Data Loaded.");
-        } else if (args[0].contains("u")) {
-            System.out.println("Loading data ...");
+            System.out.println(Constants.DATA_LOADED);
+        } else if (args[0].contains(Constants.UPDATE)) {
+            System.out.println(Constants.LOADING_DATA);
             try {
-                String[] employees = readEmployeeLine().split(",");
+                String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
                 String nameToUpdate = args[0].substring(1);
                 for (int i = 0; i < employees.length; i++) {
                     if (employees[i].equals(nameToUpdate)) {
-                        employees[i] = "Updated";
+                        employees[i] = Constants.UPDATED_NAME;
                     }
                 }
-                writeEmployeeLine(String.join(",", employees), false);
+                writeEmployeeLine(String.join(Constants.SEPARATOR, employees), false);
             } catch (Exception e) {
                 // Errors are ignored for now (fixed in task 6)
             }
-            System.out.println("Data Updated.");
-        } else if (args[0].contains("d")) {
-            System.out.println("Loading data ...");
+            System.out.println(Constants.DATA_UPDATED);
+        } else if (args[0].contains(Constants.DELETE)) {
+            System.out.println(Constants.LOADING_DATA);
             try {
-                String[] employees = readEmployeeLine().split(",");
+                String[] employees = readEmployeeLine().split(Constants.SEPARATOR);
                 String nameToDelete = args[0].substring(1);
                 List<String> remainingEmployees = new ArrayList<>(Arrays.asList(employees));
                 remainingEmployees.remove(nameToDelete);
-                writeEmployeeLine(String.join(",", remainingEmployees), false);
+                writeEmployeeLine(String.join(Constants.SEPARATOR, remainingEmployees), false);
             } catch (Exception e) {
                 // Errors are ignored for now (fixed in task 6)
             }
-            System.out.println("Data Deleted.");
+            System.out.println(Constants.DATA_DELETED);
         }
     }
 
     /** Reads the single line of employee names from the file. */
     private static String readEmployeeLine() throws IOException {
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream("employees.txt")))) {
+                new InputStreamReader(new FileInputStream(Constants.EMPLOYEES_FILE)))) {
             return reader.readLine();
         }
     }
 
     /** Writes text to the file, either appending or replacing its contents. */
     private static void writeEmployeeLine(String text, boolean append) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("employees.txt", append))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.EMPLOYEES_FILE, append))) {
             writer.write(text);
         }
     }
