@@ -14,6 +14,19 @@ import java.util.Random;
  */
 public class EmployeeManager {
     public static void main(String[] args) {
+        // Stop early unless exactly one argument was given
+        if (args.length != 1) {
+            System.out.println("Usage: java EmployeeManager <command>");
+            System.out.println("  l        List all employees");
+            System.out.println("  s        Show a random employee");
+            System.out.println("  +<name>  Add an employee");
+            System.out.println("  ?<name>  Search for an employee");
+            System.out.println("  c        Count words and characters");
+            System.out.println("  u<name>  Update an employee");
+            System.out.println("  d<name>  Delete an employee");
+            return;
+        }
+
         // Run the command given as the first argument
         if (args[0].equals("l")) {
             System.out.println("Loading data ...");
